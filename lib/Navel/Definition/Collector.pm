@@ -20,7 +20,7 @@ use Navel::API::Swagger2::Scheduler;
 sub json_validator {
     my $class = shift;
 
-    $json_validator = state JSON::Validator->new()->schema(
+    state $json_validator = JSON::Validator->new()->schema(
         Navel::API::Swagger2::Scheduler->new()->expand()->api_spec()->get('/definitions/collector')
     );
 }
