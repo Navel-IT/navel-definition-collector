@@ -15,16 +15,18 @@ use JSON::Validator;
 
 use Navel::API::Swagger2::Scheduler;
 
-#-> class variables
-
-my $json_validator = JSON::Validator->new()->schema(
-    Navel::API::Swagger2::Scheduler->new()->expand()->api_spec()->get('/definitions/collector')
-);
-
 #-> methods
 
+sub json_validator {
+    my $class = shift;
+
+    $json_validator = state JSON::Validator->new()->schema(
+        Navel::API::Swagger2::Scheduler->new()->expand()->api_spec()->get('/definitions/collector')
+    );
+}
+
 BEGIN {
-    __PACKAGE__->_create_setters(@{$json_validator->schema()->data()->{required}});
+    __PACKAGE__->_create_setters(@{__PACKAGE__->json_validator()->schema()->data()->{required}});
 }
 
 sub validate {
@@ -33,7 +35,7 @@ sub validate {
     $class->SUPER::validate(
         raw_definition => $raw_definition,
         validator => sub {
-            $json_validator->validate(shift);
+            $class->json_validator()->validate(shift);
         },
         definition_class => __PACKAGE__,
         if_possible_suffix_errors_with_key_value => 'name'
