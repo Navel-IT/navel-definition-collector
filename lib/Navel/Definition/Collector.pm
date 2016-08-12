@@ -11,24 +11,31 @@ use Navel::Base;
 
 use parent 'Navel::Base::Definition';
 
-BEGIN {
-    __PACKAGE__->_prepare_definition(
-        'Navel::API::Swagger2::Scheduler',
-        '/definitions/collector'
-    );
+use JSON::Validator;
 
-    __PACKAGE__->_create_setters(@{__PACKAGE__->swagger_definition()->{required}});
-}
+use Navel::API::Swagger2::Scheduler;
+
+#-> class variables
+
+my $json_validator = JSON::Validator->new()->schema(
+    Navel::API::Swagger2::Scheduler->new()->expand()->api_spec()->get('/definitions/collector')
+);
 
 #-> methods
+
+BEGIN {
+    __PACKAGE__->_create_setters(@{$json_validator->schema()->data()->{required}});
+}
 
 sub validate {
     my ($class, $raw_definition) = @_;
 
     $class->SUPER::validate(
-        definition_class => __PACKAGE__,
-        validator => $class->swagger_definition(),
         raw_definition => $raw_definition,
+        validator => sub {
+            $json_validator->validate(shift);
+        },
+        definition_class => __PACKAGE__,
         if_possible_suffix_errors_with_key_value => 'name'
     );
 }
