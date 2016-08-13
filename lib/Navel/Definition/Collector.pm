@@ -35,7 +35,9 @@ sub validate {
     $class->SUPER::validate(
         raw_definition => $raw_definition,
         validator => sub {
-            $class->json_validator()->validate(shift);
+            [
+                $class->json_validator()->validate(shift)
+            ];
         },
         definition_class => __PACKAGE__,
         if_possible_suffix_errors_with_key_value => 'name'
