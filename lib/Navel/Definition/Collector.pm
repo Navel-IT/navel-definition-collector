@@ -30,10 +30,10 @@ BEGIN {
 }
 
 sub validate {
-    my ($class, $raw_definition) = @_;
+    my $class = shift;
 
     $class->SUPER::validate(
-        raw_definition => $raw_definition,
+        raw_definition => shift,
         validator => sub {
             [
                 $class->json_validator()->validate(shift)
