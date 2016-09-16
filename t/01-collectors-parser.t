@@ -17,7 +17,7 @@ BEGIN {
 
 #-> main
 
-my $collectors_definitions_path = 't/01-collectors.yml';
+my $collectors_definitions_path = 't/01-collectors.json';
 
 lives_ok {
     Navel::Definition::Collector::Parser->new()->read(
