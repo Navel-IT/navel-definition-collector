@@ -20,9 +20,9 @@ BEGIN {
 my $collectors_definitions_path = 't/01-collectors.json';
 
 lives_ok {
-    Navel::Definition::Collector::Parser->new()->read(
+    Navel::Definition::Collector::Parser->new->read(
         file_path => $collectors_definitions_path
-    )->make();
+    )->make;
 } 'making configuration from ' . $collectors_definitions_path;
 
 #-> END
