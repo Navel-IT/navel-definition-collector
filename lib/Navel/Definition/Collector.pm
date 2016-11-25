@@ -11,22 +11,22 @@ use Navel::Base;
 
 use parent 'Navel::Base::Definition';
 
-use JSON::Validator;
+use JSON::Validator::OpenAPI;
 
-use Navel::API::Swagger2::Scheduler;
+use Navel::API::OpenAPI::Scheduler;
 
 #-> methods
 
 sub json_validator {
     my $class = shift;
 
-    state $json_validator = JSON::Validator->new->schema(
-        Navel::API::Swagger2::Scheduler->new->expand->api_spec->get('/definitions/collector')
+    state $json_validator = JSON::Validator::OpenAPI->new->schema(
+        Navel::API::OpenAPI::Scheduler->new->schema->get('/definitions/collector')
     );
 }
 
 BEGIN {
-    __PACKAGE__->_create_setters(@{__PACKAGE__->json_validator->schema->data->{required}});
+    __PACKAGE__->_create_setters(@{__PACKAGE__->json_validator->schema->get('/allOf/1/required')});
 }
 
 sub validate {
