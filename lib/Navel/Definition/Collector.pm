@@ -13,7 +13,7 @@ use parent 'Navel::Base::Definition';
 
 use JSON::Validator::OpenAPI;
 
-use Navel::API::OpenAPI::Scheduler;
+use Navel::API::OpenAPI::CollectorManager;
 
 #-> methods
 
@@ -21,7 +21,7 @@ sub json_validator {
     my $class = shift;
 
     state $json_validator = JSON::Validator::OpenAPI->new->schema(
-        Navel::API::OpenAPI::Scheduler->new->schema->get('/definitions/collector')
+        Navel::API::OpenAPI::CollectorManager->new->schema->get('/definitions/collector')
     );
 }
 
